@@ -4,6 +4,67 @@
 */
 
 
+
+// This is the process i do using vector 
+
+class Solution {
+public:
+    int solveUsingRe(vector<int>&nums,int i,int n){
+        if(i>n) return 0;
+        int include=nums[i]+solveUsingRe(nums,i+2,n);
+        int exclude=solveUsingRe(nums,i+1,n);
+        return max(include,exclude);
+    }
+    int solveUsingMem(vector<int>&nums,int i,int n,vector<int>&dp){
+        if(i>n) return 0;
+        if(dp[i]!=-1)return dp[i];
+        int include=nums[i]+solveUsingMem(nums,i+2,n,dp);
+        int exclude=solveUsingMem(nums,i+1,n,dp);
+        dp[i]= max(include,exclude);
+        return dp[i];
+    }
+    int tabulation(vector<int>&nums,int i,int n){
+    vector<int>dp(n+3,0);
+    for(int j=n;j>=i;j--){
+     int include=nums[j]+dp[j+2];
+     int exclude=dp[j+1];
+        dp[j]= max(include,exclude);
+         
+    }
+        return dp[i];
+       
+    }
+    int spaceOpti(vector<int>&nums,int i,int n){
+     int next1=0,next2=0;
+    for(int j=n;j>=i;j--){
+     int include=nums[j]+next2;
+     int exclude=next1;
+       int curr= max(include,exclude);
+        next2=next1;
+        next1=curr; 
+    }
+ return next1;  
+    }
+    int rob(vector<int>& nums) {
+    if(nums.size()==1) return nums[0];
+    if(nums.size()==2) return max(nums[0],nums[1]);
+    // return max(solveUsingRe(nums,0,nums.size()-2), solveUsingRe(nums,1,nums.size()-1));
+
+    // vector<int>dp1(nums.size()+1,-1);
+    // vector<int>dp2(nums.size()+1,-1);
+    // return max(solveUsingMem(nums,0,nums.size()-2,dp1), solveUsingMem(nums,1,nums.size()-1,dp2));
+
+    //  return max(tabulation(nums,0,nums.size()-2), tabulation(nums,1,nums.size()-1));
+     return max(spaceOpti(nums,0,nums.size()-2), spaceOpti(nums,1,nums.size()-1));
+    }
+};
+
+
+
+
+// This is the process i do using normal array and memset 
+
+
 //Approach-1 (Recur + Memo)
 class Solution {
 public:
